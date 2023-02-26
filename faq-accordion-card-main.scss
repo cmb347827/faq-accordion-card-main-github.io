@@ -1,0 +1,204 @@
+$container__form-xs: 375;
+$container__form-sm: 576;
+$container__form-md: 768;
+$container__form-lg: 992;
+$container__form-xl: 1200;
+$container__form-xxl: 1400;
+
+$font-size: 12px;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+$container__form-xxl-min: 1399;
+ 
+
+$colors : (Very dark desaturated blue: hsl(238, 29%, 16%), Soft red: hsl(14, 88%, 65%), Very dark grayish blue: hsl(237, 12%, 33%), Dark grayish blue: hsl(240, 6%, 50%), Light grayish blue: hsl(240, 5%, 91%), White: rgb(255,255,224));
+$fallback-colors: (Navy Red LightSkyBlue4 LightSlateGray LightSteelBlue Snow);
+$gradient-colors: (Soft violet:hsl(273, 75%, 66%),Soft blue: hsl(240, 73%, 65%));
+$gradient-fallback-colors: (DarkOrchid 'Denim Blue');
+
+
+$accordion-color: map-get($colors,Very dark grayish blue);
+$accordion-bg:    map-get($colors,White);
+$accordion-button-hover-color: map-get($colors, Soft red);
+
+@mixin bg-color($color,$fallback-color){
+    background-color: $fallback-color;
+    background-color: $color;
+}
+@mixin font-color($color,$fallback-color){
+    color: $fallback-color;
+	color: $color;
+}
+@mixin linear-gradient($color1,$fallback-color1,$color2,$fallback-color2){
+    background-image: linear-gradient($fallback-color1,$fallback-color2);
+    background-image: linear-gradient($color1,$color2);
+}
+@mixin width($grid-size){
+    width: $grid-size * 1px;
+}
+
+@mixin border-radius($radius){
+    border-radius: $radius;
+}
+@mixin margin($args...){
+    margin: $args;
+}
+@mixin padding($args...){
+    padding: $args;
+}
+
+
+*,::before,::after{
+	box-sizing:border-box;
+}
+html, body{
+	width: 100vw;
+	height: 100vh;
+	overflow: auto;
+	font: $font-weight-normal $font-size 'Kumbh Sans', sans-serif;
+	@include font-color(map-get($colors, Very dark desaturated blue), nth($fallback-colors, 1));
+	
+	
+	@media screen and (min-width: $container__form-xxl * 1px){ 
+	   //apply purple gradient background to desktop only (body sized)
+	   @include linear-gradient(lighten(map-get($gradient-colors,Soft violet),12),nth($gradient-fallback-colors,1),map-get($gradient-colors,Soft blue),nth($gradient-fallback-colors,2));
+	}
+	
+}
+
+h1{
+    font-weight: $font-weight-bold;
+}
+
+
+main{
+	overflow: auto;
+	width: 100%;
+	min-height: 100vh;
+	display:grid;
+	place-content: center;
+	
+	
+	
+	.container{
+	    @include width($container__form-xs);
+		@include margin(0 50px);
+		
+		//apply purple gradient background to mobile only (container sized)
+		@media screen and (max-width: $container__form-xxl-min* 1px){ 
+		    @include linear-gradient(map-get($gradient-colors,Soft violet),nth($gradient-fallback-colors,1),map-get($gradient-colors,Soft blue),nth($gradient-fallback-colors,2));
+		}
+		.small-image{
+		    display:none;
+			@media screen and (min-width: $container__form-xxl * 1px){
+			   display:block;
+			   //move the small box to the right and down to align with the other image in desktop.
+			   transform: translate(90px,70px);
+			   z-index: 1;
+			}
+		}
+		.image{
+		    #mobile{
+		        display:none;
+		    }
+		    #desktop{
+		        display: none;
+		    }
+	        @media screen and (max-width: $container__form-xxl-min * 1px){
+			    position:relative;
+				//ensure image places on top of .under class element area.
+			    z-index:1;
+				//move the image down to align with svg background in .under
+				transform:  translateY(105px);
+				
+			    #mobile{
+				   //show the mobile image in mobile
+		           display:block;
+				   width: 100%;
+		        }
+		    }
+		    @media screen and (min-width: $container__form-xxl * 1px){
+			    //apply background svg to desktop only and within the img element background area only.
+				background:#fff (-445px -180px) url(https://raw.githubusercontent.com/cmb347827/faq-accordion-card-main-github.io/main/bg-pattern-desktop.svg) no-repeat;
+			    #desktop{
+				   //show the desktop image in desktop.
+		           display: block;
+				   width: 100%;
+				   height: 80vh;
+				   //tilt the image forward(downish) 55 degrees.
+				   transform: rotateX(55deg);
+				   @include padding(0 35px 0 0);
+		        }
+		    }
+	    }
+		.under{
+		     @media screen and (max-width: $container__form-xxl-min * 1px){
+			    //apply background svg to mobile only and within the accordion/h1 elements background area only 
+			    background: #fff (-5px 11px)/(360px 140px) url(https://raw.githubusercontent.com/cmb347827/faq-accordion-card-main-github.io/main/bg-pattern-mobile.svg) no-repeat;
+			 }
+			 @include padding(150px 0 0 0); 
+			 @include margin(0 0 50px 0);
+			 
+			 
+			 //answers text.
+			 .accordion-body p{
+			     @include font-color(map-get($colors, Dark grayish blue), nth($fallback-colors, 4));
+			 }
+			 
+			 //closed questions 
+			 .collapsed{
+			     //background color for closed (collapsed) questions
+			     background-color: $accordion-bg;
+				 @include font-color(map-get($colors, Very dark desaturated blue), nth($fallback-colors, 1));
+				 &:hover{
+				    //font color on hover for collapsed questions
+					@include font-color(map-get($colors, Soft red), nth($fallback-colors, 2));
+				 }
+				 
+			 }
+			 //to color the button arrow
+			 .accordion-button:after {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ff0008'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+             }
+			 //gets rid of the default border
+			 :focus {
+               outline: 0;
+               box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+             }
+			 //the open questions text changes to background color and font color/font weight.
+			 .accordion-button:not(.collapsed){
+			     background-color: $accordion-bg;
+                 @include font-color(map-get($colors, Very dark grayish blue), nth($fallback-colors,3));
+				 font-weight: $font-weight-bold;
+				 &:hover{
+				     @include font-color(map-get($colors, Dark grayish blue), nth($fallback-colors, 4));
+				 }
+			 }
+			 
+			 @media screen and (min-width: $container__form-xxl * 1px){
+			     @include margin(0);
+				 background-color: #fff;
+				 //align the accordion's height to the image on the left in desktop.
+				 align-self: stretch;
+			 }  
+		}
+		
+	}
+	
+	@media screen and (min-width: $container__form-xxl * 1px){ 
+	    //because the small box was moved to the right and it makes the container appear 'not centered' otherwise, used .small image translated amount.
+	    transform: translateX(-90px);
+		.container{
+	        @include width($container__form-xxl);
+			
+		}
+    }
+    
+	
+}
+footer{
+    .attribution { font-size: 11px; text-align: center; }
+    .attribution a { color: hsl(228, 45%, 44%); }
+}
+
+//SCSS validated at https://codebeautify.org/scss-beautifier 
